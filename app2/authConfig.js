@@ -5,12 +5,12 @@
  */
 const msalConfig = {
     auth: {
-        clientId: "Enter_the_Application_Id_Here",
-        authority: "Enter_the_Cloud_Instance_Id_HereEnter_the_Tenant_Info_Here",
-        redirectUri: "Enter_the_Redirect_Uri_Here",
+        clientId: "90875197-f34d-4933-b9e9-b6aaee0da00f",
+        authority: "https://login.microsoftonline.com/cbaf2168-de14-4c72-9d88-f5f05366dbef",
+        redirectUri: "http://localhost:3002",
     },
     cache: {
-        cacheLocation: "sessionStorage", // This configures where your cache will be stored
+        cacheLocation: "localStorage", // This configures where your cache will be stored
         storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
     },
     system: {	
@@ -36,6 +36,12 @@ const msalConfig = {
             }	
         }	
     }
+};
+
+// Add here the endpoints for MS Graph API services you would like to use.
+const graphConfig = {
+    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
+    graphMailEndpoint: "https://graph.microsoft.com/v1.0/me/messages"
 };
 
 /**
