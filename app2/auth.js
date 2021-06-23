@@ -12,11 +12,6 @@ window.addEventListener('message', (event) => {
         // Data sent with postMessage is stored in event.data:
         console.log("Received Message : " + event.data);
         username = event.data;
-    } else {
-        // The data was NOT sent from your site! 
-        // Be careful! Do not use it. This else branch is
-        // here just for clarity, you usually shouldn't need it.
-        return;
     }
 });
 
@@ -57,6 +52,7 @@ function handleResponse(response) {
 function signIn() {
 
     if (username.length !== 0) {
+        console.log('in signin ', username);
         /**
          * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
          * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
