@@ -3,6 +3,22 @@
 const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
 let username = "";
+// iframe document code
+
+window.addEventListener('message', (event) => {
+    // IMPORTANT: check the origin of the data! 
+    if (event.origin.startsWith('http://localhost:3001')) {
+        // The data was sent from your site.
+        // Data sent with postMessage is stored in event.data:
+        console.log("Received Message : " + event.data);
+        username = event.data;
+    } else {
+        // The data was NOT sent from your site! 
+        // Be careful! Do not use it. This else branch is
+        // here just for clarity, you usually shouldn't need it.
+        return;
+    }
+});
 
 function selectAccount() {
 
@@ -40,16 +56,25 @@ function handleResponse(response) {
 
 function signIn() {
 
-    /**
-     * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
-     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
-     */
+    if (username.length !== 0) {
+        /**
+         * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
+         * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
+         */
 
-    myMSALObj.loginPopup(loginRequest)
-        .then(handleResponse)
-        .catch(error => {
-            console.error(error);
-        });
+        silentLoginRequest.loginHint = username;
+
+        myMSALObj.ssoSilent(silentLoginRequest)
+            .then(handleResponse)
+            .catch(error => {
+                if (error instanceof msal.InteractionRequiredAuthError) {
+                    myMSALObj.loginPopup(silentLoginRequest)
+                        .then(handleResponse);
+                } else {
+                    console.error(error);
+                }
+            });
+    }
 }
 
 function signOut() {
@@ -75,7 +100,7 @@ function getTokenPopup(request) {
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
      */
     request.account = myMSALObj.getAccountByUsername(username);
-    
+
     return myMSALObj.acquireTokenSilent(request)
         .catch(error => {
             console.warn("silent token acquisition fails. acquiring token using popup");
@@ -89,9 +114,9 @@ function getTokenPopup(request) {
                         console.error(error);
                     });
             } else {
-                console.warn(error);   
+                console.warn(error);
             }
-    });
+        });
 }
 
 function seeProfile() {

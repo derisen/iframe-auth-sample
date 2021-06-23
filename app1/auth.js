@@ -32,6 +32,9 @@ function handleResponse(response) {
 
     if (response !== null) {
         username = response.account.username;
+
+        const app2 = document.getElementById("app2");
+        app2.contentWindow.postMessage(username, "http://localhost:3002");
         showWelcomeMessage(username);
     } else {
         selectAccount();
