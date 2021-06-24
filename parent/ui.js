@@ -9,6 +9,4 @@ function welcomeUser(username) {
     signInButton.setAttribute("onclick", "signOut();");
     signInButton.setAttribute('class', "btn btn-success")
     signInButton.innerHTML = "Sign Out";
-
-    // frameDiv1.classList.remove("d-none");
 }

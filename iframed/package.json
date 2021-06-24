@@ -1,5 +1,5 @@
 {
-  "name": "msal-state-sample",
+  "name": "msal-iframe-sample",
   "version": "1.0.0",
   "description": "JavaScript SPA calling a custom web API with MSAL.js 2.x using the auth code flow with PKCE",
   "main": "server.js",

@@ -15,10 +15,9 @@ const detectIEOrEdge = () => {
  */
 const msalConfig = {
     auth: {
-        clientId: "90875197-f34d-4933-b9e9-b6aaee0da00f",
+        clientId: "5e7fcf07-1e7f-40de-98d3-ad701415117d",
         authority: "https://login.microsoftonline.com/cbaf2168-de14-4c72-9d88-f5f05366dbef",
-        redirectUri: "/auth",
-        postLogoutRedirectUri: "/"
+        redirectUri: "/",
     },
     cache: {
         cacheLocation: "localStorage", // This configures where your cache will be stored
@@ -49,17 +48,18 @@ const msalConfig = {
     }
 };
 
+/**
+ * Scopes you add here will be prompted for user consent during sign-in.
+ * By default, MSAL.js will add OIDC scopes (openid, profile, email) to any login request.
+ * For more information about OIDC scopes, visit: 
+ * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
+ */
+const loginRequest = {
+    scopes: ["User.Read"]
+};
+
 // Add here the endpoints for Microsoft Graph services you would like to use.
 const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
     graphMailEndpoint: "https://graph.microsoft.com/v1.0/me/messages"
-};
-
-/**
- * Add here the scopes to request when obtaining an access token for MS Graph API. For more information, see:
- * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
- */
-const tokenRequest = {
-    scopes: ["User.Read", "Mail.Read"],
-    forceRefresh: false // Set this to "true" to skip a cached token and go to the server to get a new token
 };

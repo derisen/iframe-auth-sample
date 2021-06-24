@@ -4,12 +4,11 @@ const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
 let username = "";
 
-window.addEventListener('message', (event) => {
+window.addEventListener("message", (event) => {
     // IMPORTANT: check the origin of the data! 
-    if (event.origin.startsWith('http://localhost:3001')) {
-        // The data was sent from your site.
+    if (event.origin === "http://localhost:3001") {
         // Data sent with postMessage is stored in event.data:
-        console.log("Received Message : " + event.data);
+        console.log("Received message: " + event.data);
         username = event.data;
     }
 });
@@ -51,24 +50,26 @@ function handleResponse(response) {
 
 function signIn() {
 
-        console.log('in signin ', username);
-        /**
-         * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
-         * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
-         */
+    console.log('in signin ', username);
+    /**
+     * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
+     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
+     */
 
-        myMSALObj.ssoSilent({
-            loginHint: username ? username : undefined
-        }).then(handleResponse)
-            .catch(error => {
-                // if (error instanceof msal.InteractionRequiredAuthError) {
-                //     myMSALObj.loginPopup({})
-                //         .then(handleResponse);
-                // } else {
-                //     myMSALObj.loginPopup({})
-                //     .then(handleResponse);
-                // }
-            });
+    myMSALObj.ssoSilent({
+        loginHint: username
+    }).then(handleResponse)
+        .catch(error => {
+            console.log(error);
+            console.log(username);
+            if (error instanceof msal.InteractionRequiredAuthError) {
+                myMSALObj.loginPopup({
+                    loginHint: username,
+                    prompt: "login",
+                })
+                    .then(handleResponse);
+            }
+        });
 }
 
 function signOut() {
@@ -80,8 +81,8 @@ function signOut() {
 
     const logoutRequest = {
         account: myMSALObj.getAccountByUsername(username),
-        postLogoutRedirectUri: msalConfig.auth.redirectUri,
-        mainWindowRedirectUri: "/"
+        mainWindowRedirectUri: "http://localhost:3002/",
+        postLogoutRedirectUri: "http://localhost:3002/",
     };
 
     myMSALObj.logoutPopup(logoutRequest);

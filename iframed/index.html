@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Child 1</title>
+    <title>iframed app</title>
     <link rel="SHORTCUT ICON" href="./favicon.svg" type="image/x-icon">
 
     <!-- msal.min.js can be used in the place of msal.js; included msal.js to make debug easy -->
@@ -25,7 +25,7 @@
 
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <a class="navbar-brand" href="/">Child 1</a>
+        <a class="navbar-brand" href="/">iframed app</a>
         <div class="btn-group ml-auto dropleft">
             <button type="button" id="SignIn" class="btn btn-secondary" onclick="signIn()">
                 Sign In
@@ -35,11 +35,11 @@
     <br>
     <div class="card">
         <div class="card-body text-center">
-          <h5 id="welcome-div" class="card-title"></h5>
-          <pre id="response" class="card-text"></pre>
-          <button type="button" id="callApiButton" class="btn btn-primary d-none" onclick="passTokenToApi()">Call MS Graph</button>
+            <h5 id="welcome-div" class="card-title"></h5>
+            <pre id="response" class="card-text"></pre>
+            <button type="button" id="callApiButton" class="btn btn-primary d-none" onclick="passTokenToApi()">Call MS Graph</button>
         </div>
-      </div>
+    </div>
 
     <!-- importing bootstrap.js and supporting js libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -55,7 +55,7 @@
     <!-- importing app scripts (load order is important) -->
     <script type="text/javascript" src="./authConfig.js"></script>
     <script type="text/javascript" src="./ui.js"></script>
-    <script type="text/javascript" src="./authPopup.js"></script>
+    <script type="text/javascript" src="./auth.js"></script>
     <script type="text/javascript" src="./graph.js"></script>
 </body>
 
