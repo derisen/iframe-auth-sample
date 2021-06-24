@@ -3,8 +3,21 @@
 const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
 let username = "";
+const app2 = document.getElementById("app2");
+const app3 = document.getElementById("app3");
 
-function selectAccount() {
+/**
+ * A promise handler needs to be registered for handling the
+ * response returned from redirect flow. For more information, visit:
+ * 
+ */
+myMSALObj.handleRedirectPromise()
+    .then(handleResponse)
+    .catch((error) => {
+        console.error(error);
+    });
+
+function selectAccount () {
 
     /**
      * See here for more info on account retrieval: 
@@ -12,14 +25,16 @@ function selectAccount() {
      */
 
     const currentAccounts = myMSALObj.getAllAccounts();
-    if (currentAccounts.length === 0) {
+
+    if (!currentAccounts) {
         return;
     } else if (currentAccounts.length > 1) {
-        // Add choose account code here
+        // Add your account choosing logic here
         console.warn("Multiple accounts detected.");
     } else if (currentAccounts.length === 1) {
         username = currentAccounts[0].username;
-        showWelcomeMessage(username);
+        welcomeUser(username);
+        app2.contentWindow.postMessage(username, "http://localhost:3002");
     }
 }
 
@@ -32,11 +47,8 @@ function handleResponse(response) {
 
     if (response !== null) {
         username = response.account.username;
-
-        const app2 = document.getElementById("app2");
+        welcomeUser(username);
         app2.contentWindow.postMessage(username, "http://localhost:3002");
-        
-        showWelcomeMessage(username);
     } else {
         selectAccount();
     }
@@ -49,11 +61,7 @@ function signIn() {
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
      */
 
-    myMSALObj.loginPopup(loginRequest)
-        .then(handleResponse)
-        .catch(error => {
-            console.error(error);
-        });
+    myMSALObj.loginRedirect(loginRequest);
 }
 
 function signOut() {
@@ -63,57 +71,11 @@ function signOut() {
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
      */
 
+    // Choose which account to logout from by passing a username.
     const logoutRequest = {
         account: myMSALObj.getAccountByUsername(username),
-        postLogoutRedirectUri: msalConfig.auth.redirectUri,
-        mainWindowRedirectUri: msalConfig.auth.redirectUri
+        postLogoutRedirectUri: '/',
     };
 
-    myMSALObj.logoutPopup(logoutRequest);
+    myMSALObj.logoutRedirect(logoutRequest);
 }
-
-function getTokenPopup(request) {
-
-    /**
-     * See here for more info on account retrieval: 
-     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
-     */
-    request.account = myMSALObj.getAccountByUsername(username);
-    
-    return myMSALObj.acquireTokenSilent(request)
-        .catch(error => {
-            console.warn("silent token acquisition fails. acquiring token using popup");
-            if (error instanceof msal.InteractionRequiredAuthError) {
-                // fallback to interaction when silent call fails
-                return myMSALObj.acquireTokenPopup(request)
-                    .then(tokenResponse => {
-                        console.log(tokenResponse);
-                        return tokenResponse;
-                    }).catch(error => {
-                        console.error(error);
-                    });
-            } else {
-                console.warn(error);   
-            }
-    });
-}
-
-function seeProfile() {
-    getTokenPopup(loginRequest)
-        .then(response => {
-            callMSGraph(graphConfig.graphMeEndpoint, response.accessToken, updateUI);
-        }).catch(error => {
-            console.error(error);
-        });
-}
-
-function readMail() {
-    getTokenPopup(tokenRequest)
-        .then(response => {
-            callMSGraph(graphConfig.graphMailEndpoint, response.accessToken, updateUI);
-        }).catch(error => {
-            console.error(error);
-        });
-}
-
-selectAccount();

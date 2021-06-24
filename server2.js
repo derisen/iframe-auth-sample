@@ -17,6 +17,17 @@ app.use(morgan('dev'));
 app.use(express.static('app2'));
 
 // Set up a route for index.html
+app.get('/ssout', (req, res) => {
+    console.log(req.query);
+    res.sendFile(path.join(__dirname + '/app2/ssout.html'));
+});
+
+// Set up a route for index.html
+app.get('/auth', (req, res) => {
+    res.sendFile(path.join(__dirname + '/app2/auth.html'));
+});
+
+// Set up a route for index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/app2/index.html'));
 });

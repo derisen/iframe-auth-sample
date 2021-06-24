@@ -3,7 +3,6 @@
 const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
 let username = "";
-// iframe document code
 
 window.addEventListener('message', (event) => {
     // IMPORTANT: check the origin of the data! 
@@ -23,6 +22,7 @@ function selectAccount() {
      */
 
     const currentAccounts = myMSALObj.getAllAccounts();
+
     if (currentAccounts.length === 0) {
         return;
     } else if (currentAccounts.length > 1) {
@@ -51,26 +51,24 @@ function handleResponse(response) {
 
 function signIn() {
 
-    if (username.length !== 0) {
         console.log('in signin ', username);
         /**
          * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
          * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
          */
 
-        silentLoginRequest.loginHint = username;
-
-        myMSALObj.ssoSilent(silentLoginRequest)
-            .then(handleResponse)
+        myMSALObj.ssoSilent({
+            loginHint: username ? username : undefined
+        }).then(handleResponse)
             .catch(error => {
                 if (error instanceof msal.InteractionRequiredAuthError) {
-                    myMSALObj.loginPopup(silentLoginRequest)
+                    myMSALObj.loginPopup({})
                         .then(handleResponse);
                 } else {
-                    console.error(error);
+                    myMSALObj.loginPopup({})
+                    .then(handleResponse);
                 }
             });
-    }
 }
 
 function signOut() {
@@ -83,7 +81,7 @@ function signOut() {
     const logoutRequest = {
         account: myMSALObj.getAccountByUsername(username),
         postLogoutRedirectUri: msalConfig.auth.redirectUri,
-        mainWindowRedirectUri: msalConfig.auth.redirectUri
+        mainWindowRedirectUri: "/"
     };
 
     myMSALObj.logoutPopup(logoutRequest);

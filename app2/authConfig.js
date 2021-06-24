@@ -7,7 +7,8 @@ const msalConfig = {
     auth: {
         clientId: "90875197-f34d-4933-b9e9-b6aaee0da00f",
         authority: "https://login.microsoftonline.com/cbaf2168-de14-4c72-9d88-f5f05366dbef",
-        redirectUri: "http://localhost:3002",
+        redirectUri: "/auth",
+        postLogoutRedirectUri: "/"
     },
     cache: {
         cacheLocation: "localStorage", // This configures where your cache will be stored
@@ -38,21 +39,10 @@ const msalConfig = {
     }
 };
 
-// Add here the endpoints for MS Graph API services you would like to use.
+// Add here the endpoints for Microsoft Graph services you would like to use.
 const graphConfig = {
     graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
     graphMailEndpoint: "https://graph.microsoft.com/v1.0/me/messages"
-};
-
-/**
- * Scopes you add here will be prompted for user consent during sign-in.
- * By default, MSAL.js will add OIDC scopes (openid, profile, email) to any login request.
- * For more information about OIDC scopes, visit: 
- * https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-permissions-and-consent#openid-connect-scopes
- */
-const silentLoginRequest = {
-    loginHint: "",
-    prompt: "none"
 };
 
 /**
