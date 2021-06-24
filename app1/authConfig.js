@@ -1,3 +1,13 @@
+const detectIEOrEdge = () => {
+    const ua = window.navigator.userAgent;
+    const msie = ua.indexOf("MSIE ");
+    const msie11 = ua.indexOf("Trident/");
+    const msedge = ua.indexOf("Edge/");
+    const isIE = msie > 0 || msie11 > 0;
+    const isEdge = msedge > 0;
+    return isIE || isEdge;
+}
+
 /**
  * Configuration object to be passed to MSAL instance on creation. 
  * For a full list of MSAL.js configuration parameters, visit:
@@ -12,7 +22,7 @@ const msalConfig = {
     },
     cache: {
         cacheLocation: "localStorage", // This configures where your cache will be stored
-        storeAuthStateInCookie: false, // Set this to "true" if you are having issues on IE11 or Edge
+        storeAuthStateInCookie: detectIEOrEdge(), // Set this to "true" if you are having issues on IE11 or Edge
     },
     system: {	
         loggerOptions: {	

@@ -61,13 +61,13 @@ function signIn() {
             loginHint: username ? username : undefined
         }).then(handleResponse)
             .catch(error => {
-                if (error instanceof msal.InteractionRequiredAuthError) {
-                    myMSALObj.loginPopup({})
-                        .then(handleResponse);
-                } else {
-                    myMSALObj.loginPopup({})
-                    .then(handleResponse);
-                }
+                // if (error instanceof msal.InteractionRequiredAuthError) {
+                //     myMSALObj.loginPopup({})
+                //         .then(handleResponse);
+                // } else {
+                //     myMSALObj.loginPopup({})
+                //     .then(handleResponse);
+                // }
             });
 }
 
