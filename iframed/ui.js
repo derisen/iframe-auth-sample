@@ -4,7 +4,7 @@ const profileDiv = document.getElementById("profile-div")
 const signInButton = document.getElementById("SignIn");
 const callApiButton = document.getElementById("callApiButton");
 
-function showWelcomeMessage() {
+function welcomeUser() {
     signInButton.setAttribute("onclick", "signOut();");
     signInButton.setAttribute('class', "btn btn-success")
     signInButton.innerHTML = "Sign Out";

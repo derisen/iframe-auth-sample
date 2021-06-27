@@ -102,7 +102,7 @@ function handleResponse(response) {
 
     if (response !== null) {
         username = response.account.username;
-        showWelcomeMessage();
+        welcomeUser();
     } else {
         selectAccount();
     }
@@ -124,7 +124,7 @@ function selectAccount() {
         console.warn("Multiple accounts detected.");
     } else if (currentAccounts.length === 1) {
         username = currentAccounts[0].username;
-        showWelcomeMessage();
+        welcomeUser();
     }
 }
 

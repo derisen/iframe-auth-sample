@@ -53,7 +53,7 @@ function handleResponse(response) {
             .then((iframe) => {
                 setTimeout(() => {
                     iframe.contentWindow.postMessage(username, iframeDomain);
-                }, 1000);
+                }, 2000);
             });
     } else {
         selectAccount();
@@ -82,7 +82,7 @@ function selectAccount() {
             .then((iframe) => {
                 setTimeout(() => {
                     iframe.contentWindow.postMessage(username, iframeDomain);
-                }, 1000);
+                }, 2000);
             });
     }
 }

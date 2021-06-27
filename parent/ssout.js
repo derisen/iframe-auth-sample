@@ -8,6 +8,10 @@ window.onload = () => {
     // Choose which account to logout from by passing a username.
     const logoutRequest = {
         sid: sid,
+        onRedirectNavigate: () => {
+            // Return false to stop navigation after local logout
+            return false;
+        }
     };
 
     myMSALObj.logoutRedirect(logoutRequest);
