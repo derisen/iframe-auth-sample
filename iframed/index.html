@@ -27,20 +27,17 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <a class="navbar-brand" href="/">iframed app</a>
         <div class="btn-group ml-auto dropleft">
+            <button type="button" id="callApiButton" class="btn btn-warning d-none" onclick="seeProfile()">Call Graph</button>
             <button type="button" id="SignIn" class="btn btn-secondary" onclick="signIn()">
                 Sign In
             </button>
         </div>
     </nav>
-    <br>
     <div class="card">
         <div class="card-body text-center">
-            <h5 id="welcome-div" class="card-title"></h5>
-            <pre id="response" class="card-text"></pre>
-            <button type="button" id="callApiButton" class="btn btn-primary d-none" onclick="seeProfile()">Call MS Graph</button>
+            <pre id="profile-div" class="card-text"></pre>
         </div>
     </div>
-
     <!-- importing bootstrap.js and supporting js libraries -->
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"

@@ -53,7 +53,7 @@ function handleResponse(response) {
             .then((iframe) => {
                 setTimeout(() => {
                     iframe.contentWindow.postMessage(username, iframeDomain);
-                }, 3000);
+                }, 1000);
             });
     } else {
         selectAccount();
@@ -82,7 +82,7 @@ function selectAccount() {
             .then((iframe) => {
                 setTimeout(() => {
                     iframe.contentWindow.postMessage(username, iframeDomain);
-                }, 3000);
+                }, 1000);
             });
     }
 }
@@ -90,8 +90,8 @@ function selectAccount() {
 function createIframe(appenDiv) {
     const authFrame = document.createElement("iframe");
 
-    authFrame.setAttribute("height", 200)
-    authFrame.setAttribute("width", 600)
+    authFrame.setAttribute("height", 250)
+    authFrame.setAttribute("width", 500)
     authFrame.setAttribute("border", 1)
     document.getElementById(appenDiv).appendChild(authFrame);
 

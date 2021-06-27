@@ -11,11 +11,12 @@ window.addEventListener("message", (event) => {
         // Data sent with postMessage is stored in event.data:
         console.log("Received message: " + event.data);
 
-        // set username
-        username = event.data;
-
-        // attempt SSO
-        signIn();
+        if (username.length === 0) {
+            // set username
+            username = event.data;
+            // attempt SSO
+            signIn();
+        }
     }
 });
 
@@ -29,7 +30,8 @@ function signIn() {
     myMSALObj.ssoSilent({
         loginHint: username
     }).then(handleResponse)
-        .catch(error => {;
+        .catch(error => {
+            ;
             if (error instanceof msal.InteractionRequiredAuthError) {
                 myMSALObj.loginPopup({
                     loginHint: username,
@@ -83,7 +85,7 @@ function getTokenPopup(request) {
 }
 
 function seeProfile() {
-    getTokenPopup(loginRequest)
+    getTokenPopup(tokenRequest)
         .then(response => {
             callMSGraph(graphConfig.graphMeEndpoint, response.accessToken, updateUI);
         }).catch(error => {
@@ -100,7 +102,7 @@ function handleResponse(response) {
 
     if (response !== null) {
         username = response.account.username;
-        showWelcomeMessage(username);
+        showWelcomeMessage();
     } else {
         selectAccount();
     }
@@ -122,7 +124,7 @@ function selectAccount() {
         console.warn("Multiple accounts detected.");
     } else if (currentAccounts.length === 1) {
         username = currentAccounts[0].username;
-        showWelcomeMessage(username);
+        showWelcomeMessage();
     }
 }
 

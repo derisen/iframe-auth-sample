@@ -18,6 +18,11 @@ app.get('/redirect', (req, res) => {
 });
 
 // Set up a route for index.html
+app.get('/ssout', (req, res) => {
+    res.sendFile(path.join(__dirname + '/ssout.html'));
+});
+
+// Set up a route for index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/index.html'));
 });

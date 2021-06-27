@@ -1,13 +1,15 @@
 // Select DOM elements to work with
-const welcomeDiv = document.getElementById("welcome-div");
-const signInButton = document.getElementById("SignIn");
 const cardDiv = document.getElementById("card-div");
+const profileDiv = document.getElementById("profile-div")
+const signInButton = document.getElementById("SignIn");
+const callApiButton = document.getElementById("callApiButton");
 
-function showWelcomeMessage(username) {
-    welcomeDiv.innerHTML = `Welcome ${username}`;
+function showWelcomeMessage() {
     signInButton.setAttribute("onclick", "signOut();");
     signInButton.setAttribute('class', "btn btn-success")
     signInButton.innerHTML = "Sign Out";
+
+    callApiButton.classList.remove("d-none");
 }
 
 function updateUI(data, endpoint) {
