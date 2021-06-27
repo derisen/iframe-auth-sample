@@ -1,5 +1,4 @@
 const express = require('express');
-const morgan = require('morgan');
 const path = require('path');
 
 const DEFAULT_PORT = process.env.PORT || 3001;
@@ -9,9 +8,6 @@ const app = express();
 
 // Initialize variables.
 let port = DEFAULT_PORT;
-
-// Configure morgan module to log all requests.
-app.use(morgan('dev'));
 
 // Setup app folders.
 app.use(express.static('./'));

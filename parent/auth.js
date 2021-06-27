@@ -2,26 +2,9 @@
 // configuration parameters are located at authConfig.js
 const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
+const iframeDomain = "http://localhost:3002";
+const iframeDiv = "iframe-div"
 let username = "";
-
-const createIframe = (appenDiv) => {
-    const authFrame = document.createElement("iframe");
-
-    authFrame.setAttribute("height", 200)
-    authFrame.setAttribute("width", 600)
-    authFrame.setAttribute("border", 1)
-    document.getElementById(appenDiv).appendChild(authFrame);
-
-    return authFrame;
-}
-
-const loadFrame = (urlNavigate, appenDiv) => {
-    return new Promise((resolve, reject) => {
-        const frameHandle = createIframe(appenDiv);
-        frameHandle.src = urlNavigate;
-        resolve(frameHandle);
-    });
-}
 
 /**
  * A promise handler needs to be registered for handling the
@@ -33,6 +16,49 @@ myMSALObj.handleRedirectPromise()
     .catch((error) => {
         console.error(error);
     });
+
+function signIn() {
+
+    /**
+     * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
+     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
+     */
+
+    myMSALObj.loginRedirect(loginRequest);
+}
+
+function signOut() {
+
+    // Choose which account to logout from by passing an account object
+    const logoutRequest = {
+        account: myMSALObj.getAccountByUsername(username),
+        postLogoutRedirectUri: "/",
+    };
+
+    myMSALObj.logoutRedirect(logoutRequest);
+}
+
+function handleResponse(response) {
+
+    /**
+     * To see the full list of response object properties, visit:
+     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#response
+     */
+
+    if (response !== null) {
+        username = response.account.username;
+        welcomeUser(username);
+
+        loadFrame(iframeDomain, iframeDiv)
+            .then((iframe) => {
+                setTimeout(() => {
+                    iframe.contentWindow.postMessage(username, iframeDomain);
+                }, 3000);
+            });
+    } else {
+        selectAccount();
+    }
+}
 
 function selectAccount() {
 
@@ -52,50 +78,38 @@ function selectAccount() {
         username = currentAccounts[0].username;
         welcomeUser(username);
 
-        loadFrame("http://localhost:3002", "iframe-div").then((iframe) => {
-            console.log(iframe)
-            iframe.contentWindow.postMessage(username, "http://localhost:3002");
-        });
+        loadFrame(iframeDomain, iframeDiv)
+            .then((iframe) => {
+                setTimeout(() => {
+                    iframe.contentWindow.postMessage(username, iframeDomain);
+                }, 3000);
+            });
     }
 }
 
-function handleResponse(response) {
+function createIframe(appenDiv) {
+    const authFrame = document.createElement("iframe");
 
-    /**
-     * To see the full list of response object properties, visit:
-     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#response
-     */
+    authFrame.setAttribute("height", 200)
+    authFrame.setAttribute("width", 600)
+    authFrame.setAttribute("border", 1)
+    document.getElementById(appenDiv).appendChild(authFrame);
 
-    if (response !== null) {
-        username = response.account.username;
-        welcomeUser(username);
-
-        loadFrame("http://localhost:3002", "iframe-div").then((iframe) => {
-            console.log(iframe)
-            iframe.contentWindow.postMessage(username, "http://localhost:3002");
-        });
-    } else {
-        selectAccount();
-    }
+    return authFrame;
 }
 
-function signIn() {
+function loadFrame(urlNavigate, appenDiv) {
+    return new Promise((resolve, reject) => {
+        const frameHandle = createIframe(appenDiv);
 
-    /**
-     * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
-     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
-     */
+        setTimeout(() => {
+            if (!frameHandle) {
+                reject("Unable to load iframe");
+                return;
+            }
 
-    myMSALObj.loginRedirect(loginRequest);
-}
-
-function signOut() {
-
-    // Choose which account to logout from by passing an account object
-    const logoutRequest = {
-        account: myMSALObj.getAccountByUsername(username),
-        postLogoutRedirectUri: "http://localhost:3001/",
-    };
-
-    myMSALObj.logoutRedirect(logoutRequest);
+            frameHandle.src = urlNavigate;
+            resolve(frameHandle);
+        }, myMSALObj.config.system.navigateFrameWait)
+    });
 }

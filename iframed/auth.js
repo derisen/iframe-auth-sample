@@ -2,55 +2,25 @@
 // configuration parameters are located at authConfig.js
 const myMSALObj = new msal.PublicClientApplication(msalConfig);
 
+const parentDomain = "http://localhost:3001";
 let username = "";
 
 window.addEventListener("message", (event) => {
-    // IMPORTANT: check the origin of the data! 
-    if (event.origin === "http://localhost:3001") {
+    // check the origin of the data
+    if (event.origin === parentDomain) {
         // Data sent with postMessage is stored in event.data:
         console.log("Received message: " + event.data);
+
+        // set username
         username = event.data;
+
+        // attempt SSO
+        signIn();
     }
 });
 
-function selectAccount() {
-
-    /**
-     * See here for more info on account retrieval: 
-     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
-     */
-
-    const currentAccounts = myMSALObj.getAllAccounts();
-
-    if (currentAccounts.length === 0) {
-        return;
-    } else if (currentAccounts.length > 1) {
-        // Add choose account code here
-        console.warn("Multiple accounts detected.");
-    } else if (currentAccounts.length === 1) {
-        username = currentAccounts[0].username;
-        showWelcomeMessage(username);
-    }
-}
-
-function handleResponse(response) {
-
-    /**
-     * To see the full list of response object properties, visit:
-     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#response
-     */
-
-    if (response !== null) {
-        username = response.account.username;
-        showWelcomeMessage(username);
-    } else {
-        selectAccount();
-    }
-}
-
 function signIn() {
 
-    console.log('in signin ', username);
     /**
      * You can pass a custom request object below. This will override the initial configuration. For more information, visit:
      * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#request
@@ -59,15 +29,13 @@ function signIn() {
     myMSALObj.ssoSilent({
         loginHint: username
     }).then(handleResponse)
-        .catch(error => {
-            console.log(error);
-            console.log(username);
+        .catch(error => {;
             if (error instanceof msal.InteractionRequiredAuthError) {
                 myMSALObj.loginPopup({
                     loginHint: username,
-                    prompt: "login",
-                })
-                    .then(handleResponse);
+                }).then(handleResponse);
+            } else {
+                console.log(error);
             }
         });
 }
@@ -81,8 +49,8 @@ function signOut() {
 
     const logoutRequest = {
         account: myMSALObj.getAccountByUsername(username),
-        mainWindowRedirectUri: "http://localhost:3002/",
-        postLogoutRedirectUri: "http://localhost:3002/",
+        mainWindowRedirectUri: "/",
+        postLogoutRedirectUri: "/",
     };
 
     myMSALObj.logoutPopup(logoutRequest);
@@ -123,13 +91,39 @@ function seeProfile() {
         });
 }
 
-function readMail() {
-    getTokenPopup(tokenRequest)
-        .then(response => {
-            callMSGraph(graphConfig.graphMailEndpoint, response.accessToken, updateUI);
-        }).catch(error => {
-            console.error(error);
-        });
+function handleResponse(response) {
+
+    /**
+     * To see the full list of response object properties, visit:
+     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/request-response-object.md#response
+     */
+
+    if (response !== null) {
+        username = response.account.username;
+        showWelcomeMessage(username);
+    } else {
+        selectAccount();
+    }
+}
+
+function selectAccount() {
+
+    /**
+     * See here for more info on account retrieval: 
+     * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-common/docs/Accounts.md
+     */
+
+    const currentAccounts = myMSALObj.getAllAccounts();
+
+    if (currentAccounts.length === 0) {
+        return;
+    } else if (currentAccounts.length > 1) {
+        // Add choose account code here
+        console.warn("Multiple accounts detected.");
+    } else if (currentAccounts.length === 1) {
+        username = currentAccounts[0].username;
+        showWelcomeMessage(username);
+    }
 }
 
 selectAccount();
