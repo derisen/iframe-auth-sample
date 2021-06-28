@@ -5,8 +5,8 @@ MSAL.js can be used with iframed applications under restricted conditions:
 * You **cannot** iframe the Azure AD login UX itself, as the service will refuse to render it with the `X-FRAME OPTIONS DENY` error. This restriction is due to prevent [clickjacking attacks](https://owasp.org/www-community/attacks/Clickjacking).
     * Credential Entry
     * Consent
-* You **cannot** use [redirect APIs](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/initialization.md#redirect-apis) in an iframed msal app; user interactions with the IdP must be handled via popups (see [below]())
-* You can use [single-sign on](https://docs.microsoft.com/azure/active-directory/develop/msal-js-sso) between iframed and parent apps running on the same domain **and** on different domains **if** both apps are owned or managed (see [below]())
+* You **cannot** use [redirect APIs](https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/initialization.md#redirect-apis) in an iframed msal app; user interactions with the IdP must be handled via popups (see [below](#errors-handling))
+* You can use [single-sign on](https://docs.microsoft.com/azure/active-directory/develop/msal-js-sso) between iframed and parent apps running on the same domain **and** on different domains **if** both apps are owned or managed (see [below](#single-sign-on))
 
 > :information_source: Azure AD B2C offers an [embedded sign-in experience](https://docs.microsoft.com/azure/active-directory-b2c/embedded-login) (public preview), which allows rendering a custom login UX in an iframe. For an implementation, see the sample: []()
 
@@ -58,9 +58,9 @@ window.addEventListener("message", (event) => {
 });
 ```
 
-## Errors and exceptions
+## Errors handling
 
-You should catch the errors if ssoSilent fails. In particular:
+You should catch and handle any errors if `ssoSilent()` fails. In particular:
 
 * `InteractionRequiredError`: will be thrown for consent, MFA, etc.
 * `BrowserAuthError`: if no or empty login hint
@@ -86,8 +86,10 @@ You should catch the errors if ssoSilent fails. In particular:
 
 if you like to minimize communication with IdP that requires user interaction, or if you have issues with popups due to policy or etc, you may consider to:
 
-* **Avoid interaction when users sign-in first time** [Granting admin consent](https://docs.microsoft.com/azure/active-directory/develop/v2-admin-consent) to a tenant will suppress consent screen for permissions required by your app.
-* **Avoid interaction when calling an API that requires a permission requiring consent** [Pre-authorizing client apps]() will not require consent for permissions required by your web API
+* **Avoid interaction when users sign-in first time** 
+    * [Granting admin consent](https://docs.microsoft.com/azure/active-directory/develop/v2-admin-consent) to a tenant will suppress consent screen for permissions required by your app.
+* **Avoid interaction when calling an API that requires a permission requiring consent** 
+    * [Pre-authorizing client apps]() will not require consent for permissions required by your web API
 
 ## Single sign-out
 
