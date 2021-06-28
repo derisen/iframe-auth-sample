@@ -5,10 +5,10 @@ const myMSALObj = new msal.PublicClientApplication(msalConfig);
 const parentDomain = "http://localhost:3001";
 let username = "";
 
+// Listen for 
 window.addEventListener("message", (event) => {
     // check the origin of the data
     if (event.origin === parentDomain) {
-        // Data sent with postMessage is stored in event.data:
         console.log("Received message: " + event.data);
 
         if (username.length === 0) {
