@@ -31,11 +31,12 @@ function signIn() {
         loginHint: username
     }).then(handleResponse)
         .catch(error => {
-            ;
+            
             if (error instanceof msal.InteractionRequiredAuthError) {
                 myMSALObj.loginPopup({
                     loginHint: username,
                 }).then(handleResponse);
+            } else if (error instanceof msal.BrowserAuthError) {
             } else {
                 console.log(error);
             }
