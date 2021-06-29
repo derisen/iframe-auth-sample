@@ -12,6 +12,12 @@ let port = DEFAULT_PORT;
 // Setup app folders.
 app.use(express.static('./'));
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 // Set up a route for redirect response
 app.get('/redirect', (req, res) => {
     res.sendFile(path.join(__dirname + '/redirect.html'));
