@@ -81,7 +81,9 @@ You should catch and handle any errors if `ssoSilent()` fails. In particular:
                     });
             } else if (error instanceof msal.BrowserAuthError) {
                 myMSALObj.loginPopup()
-                    .then(handleResponse);
+                    .then((response) => {
+                        // do something with response
+                    });
             } else {
                 console.log(error);
             }

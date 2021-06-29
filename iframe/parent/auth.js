@@ -75,22 +75,17 @@ function selectAccount() {
     }
 }
 
-// appends an iframe element to a given div id
-function createFrame(appenDiv) {
-
-    if (document.getElementsByTagName("iframe").length !== 0) {
-        console.log('iframe already added')
-        return null;
-    }
-
-    const authFrame = document.createElement("iframe");
-
-    authFrame.setAttribute("height", 250)
-    authFrame.setAttribute("width", 500)
-    authFrame.setAttribute("border", 1)
-    document.getElementById(appenDiv).appendChild(authFrame);
-
-    return authFrame;
+// loads a frame at a given domain and sends a message
+function sendMessageToFrame(iframeDomain, iframeDiv, username) {
+    loadFrame(iframeDomain, iframeDiv)
+        .then((iframe) => {
+            // make sure the iframe is loaded
+            setTimeout(() => {
+                iframe.contentWindow.postMessage(username, iframeDomain);
+            }, 1000);
+        }).catch((error) => {
+            console.log(error);
+        });
 }
 
 // return a promise that resolve to an iframe on a given domain
@@ -110,16 +105,20 @@ function loadFrame(urlNavigate, appenDiv) {
     });
 }
 
-function sendMessageToFrame(iframeDomain, iframeDiv, username) {
-    // once username is obtained, pass it to child app
-    loadFrame(iframeDomain, iframeDiv)
-        .then((iframe) => {
-            // make sure the iframe is loaded
-            setTimeout(() => {
-                iframe.contentWindow.postMessage(username, iframeDomain);
-            }, 1000);
-        }).catch((error) => {
-            console.log(error);
-            sendMessageToFrame(iframeDomain, iframeDiv, username)
-        });
+// appends an iframe element to a given div id
+function createFrame(appenDiv) {
+
+    if (document.getElementsByTagName("iframe").length !== 0) {
+        console.log('iframe already added')
+        return null;
+    }
+
+    const authFrame = document.createElement("iframe");
+
+    authFrame.setAttribute("height", 250)
+    authFrame.setAttribute("width", 500)
+    authFrame.setAttribute("border", 1)
+    document.getElementById(appenDiv).appendChild(authFrame);
+
+    return authFrame;
 }

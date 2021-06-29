@@ -1,7 +1,7 @@
 {
-  "name": "msal-iframe-sample",
+  "name": "msal-iframe-sample-child",
   "version": "1.0.0",
-  "description": "JavaScript SPA calling a custom web API with MSAL.js 2.x using the auth code flow with PKCE",
+  "description": "JavaScript SPA",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -9,27 +9,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Azure-Samples/ms-identity-javascript-tutorial.git"
+    "url": "git+https://github.com/AzureAD/microsoft-authentication-library-for-js.git"
   },
-  "keywords": [
-    "javascript",
-    "msal",
-    "authorization",
-    "code",
-    "authentication",
-    "microsoft",
-    "ms-identity",
-    "azure-ad",
-    "spa",
-    "node.js",
-    "msal.js"
-  ],
   "author": "",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/Azure-Samples/ms-identity-javascript-tutorial/issues"
-  },
-  "homepage": "https://github.com/Azure-Samples/ms-identity-javascript-tutorial#readme",
   "dependencies": {
     "express": "^4.17.1"
   },

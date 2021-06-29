@@ -1,13 +1,3 @@
-const detectIEOrEdge = () => {
-    const ua = window.navigator.userAgent;
-    const msie = ua.indexOf("MSIE ");
-    const msie11 = ua.indexOf("Trident/");
-    const msedge = ua.indexOf("Edge/");
-    const isIE = msie > 0 || msie11 > 0;
-    const isEdge = msedge > 0;
-    return isIE || isEdge;
-}
-
 /**
  * Configuration object to be passed to MSAL instance on creation. 
  * For a full list of MSAL.js configuration parameters, visit:
@@ -58,8 +48,12 @@ const loginRequest = {
     scopes: ["User.Read"]
 };
 
-// Add here the endpoints for Microsoft Graph services you would like to use.
-const graphConfig = {
-    graphMeEndpoint: "https://graph.microsoft.com/v1.0/me",
-    graphMailEndpoint: "https://graph.microsoft.com/v1.0/me/messages"
-};
+function detectIEOrEdge() {
+    const ua = window.navigator.userAgent;
+    const msie = ua.indexOf("MSIE ");
+    const msie11 = ua.indexOf("Trident/");
+    const msedge = ua.indexOf("Edge/");
+    const isIE = msie > 0 || msie11 > 0;
+    const isEdge = msedge > 0;
+    return isIE || isEdge;
+}
